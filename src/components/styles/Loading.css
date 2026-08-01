@@ -45,6 +45,7 @@
 .loading-wrap {
   --Lsize: 145px;
   padding: 6px;
+  margin-top: 120px;
   position: relative;
   min-width: 0px;
   min-height: 0px;
@@ -280,7 +281,7 @@
 }
 .loading-marquee {
   position: absolute;
-  top: 50%;
+  top: 40%;
   left: 0;
   width: 100%;
   transform: translateY(-50%);
