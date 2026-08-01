@@ -6,9 +6,7 @@ const About = () => {
       <div className="about-me">
         <h3 className="title">About Me</h3>
         <p className="para">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic quis
-          dolores numquam iusto Ratione earum ducimus autem id iure pariatur
-          dolorum quae maiores.
+          I am a Software Engineer with a B.Tech in Computer Science from GLA University. I specialize in backend development, cloud computing, and GenAI. With experience in .NET Core, Microservices, and Azure, I build scalable REST APIs and enterprise healthcare applications. I am also Optum AI Dojo certified in LLM-based solutions and continuously explore modern technologies to improve efficiency.
         </p>
       </div>
     </div>
