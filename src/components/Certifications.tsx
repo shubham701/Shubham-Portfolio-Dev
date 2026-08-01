@@ -3,9 +3,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { FaMicrosoft, FaCode, FaCodeBranch, FaBrain, FaLinkedin } from "react-icons/fa6";
-
-gsap.registerPlugin(useGSAP);
-
+gsap.registerPlugin(useGSAP, ScrollTrigger);
 const certifications = [
   {
     title: "Az-900 Azure Cloud Computing Fundamental",

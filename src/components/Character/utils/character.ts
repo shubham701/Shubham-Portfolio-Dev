@@ -1,8 +1,6 @@
 import * as THREE from "three";
 import { DRACOLoader, GLTF, GLTFLoader } from "three-stdlib";
 import { setCharTimeline, setAllTimeline } from "../../utils/GsapScroll";
-import { decryptFile } from "./decrypt";
-
 const setCharacter = (
   renderer: THREE.WebGLRenderer,
   scene: THREE.Scene,
@@ -42,7 +40,8 @@ const setCharacter = (
                 // Dynamically change colors based on common mesh/material names
                 if (mesh.material) {
                   const meshName = (mesh.name || "").toLowerCase();
-                  const matName = (mesh.material.name || "").toLowerCase();
+                  const singleMaterial = Array.isArray(mesh.material) ? mesh.material[0] : mesh.material;
+                  const matName = (singleMaterial.name || "").toLowerCase();
                   const isTop = meshName.includes('shirt') || meshName.includes('top') || matName.includes('shirt') || matName.includes('top');
                   const isBottom = meshName.includes('pant') || meshName.includes('bottom') || meshName.includes('leg') || matName.includes('pant') || matName.includes('bottom');
                   const isSkin = meshName.includes('skin') || meshName.includes('body') || meshName.includes('head') || meshName.includes('face') || matName.includes('skin') || matName.includes('body') || matName.includes('head');
