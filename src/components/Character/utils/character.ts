@@ -16,15 +16,9 @@ const setCharacter = (
   const loadCharacter = () => {
     return new Promise<GLTF | null>(async (resolve, reject) => {
       try {
-        const encryptedBlob = await decryptFile(
-          "/models/character.enc",
-          "Character3D#@"
-        );
-        const blobUrl = URL.createObjectURL(new Blob([encryptedBlob]));
-
         let character: THREE.Object3D;
         loader.load(
-          blobUrl,
+          "/models/character.glb",
           async (gltf) => {
             character = gltf.scene;
             await renderer.compileAsync(character, camera, scene);
@@ -34,13 +28,49 @@ const setCharacter = (
                 child.castShadow = true;
                 child.receiveShadow = true;
                 mesh.frustumCulled = true;
+
+                // Make the character smile by setting smile morph targets
+                if (mesh.morphTargetDictionary && mesh.morphTargetInfluences) {
+                  for (const key in mesh.morphTargetDictionary) {
+                    if (key.toLowerCase().includes("smile")) {
+                      const index = mesh.morphTargetDictionary[key];
+                      mesh.morphTargetInfluences[index] = 0.5; // 0.5 for a 'little' smile
+                    }
+                  }
+                }
+
+                // Dynamically change colors based on common mesh/material names
+                if (mesh.material) {
+                  const meshName = (mesh.name || "").toLowerCase();
+                  const matName = (mesh.material.name || "").toLowerCase();
+                  const isTop = meshName.includes('shirt') || meshName.includes('top') || matName.includes('shirt') || matName.includes('top');
+                  const isBottom = meshName.includes('pant') || meshName.includes('bottom') || meshName.includes('leg') || matName.includes('pant') || matName.includes('bottom');
+                  const isSkin = meshName.includes('skin') || meshName.includes('body') || meshName.includes('head') || meshName.includes('face') || matName.includes('skin') || matName.includes('body') || matName.includes('head');
+
+                  if (isTop || isBottom || isSkin) {
+                    mesh.material = (mesh.material as THREE.Material).clone();
+                    const mat = mesh.material as THREE.MeshStandardMaterial | THREE.MeshPhysicalMaterial;
+                    
+                    if (isTop) {
+                      mat.color.set('#cbb1ff'); // Light Purple
+                      mat.roughness = 0.9;      // Matte finish
+                      mat.metalness = 0.1;
+                      mat.map = null; 
+                    } else if (isBottom) {
+                      mat.color.set('#1a1a1a'); // Dark Black
+                      mat.map = null;
+                    } else if (isSkin) {
+                      mat.color.set('#d2a18c'); // Light brown human skin tone
+                    }
+                  }
+                }
               }
             });
             resolve(gltf);
             setCharTimeline(character, camera);
             setAllTimeline();
-            character!.getObjectByName("footR")!.position.y = 3.36;
-            character!.getObjectByName("footL")!.position.y = 3.36;
+            if (character.getObjectByName("footR")) character.getObjectByName("footR")!.position.y = 3.36;
+            if (character.getObjectByName("footL")) character.getObjectByName("footL")!.position.y = 3.36;
             dracoLoader.dispose();
           },
           undefined,
